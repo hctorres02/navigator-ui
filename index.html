@@ -50,7 +50,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="column is-7">
+                    <div class="column is-7" v-if="!!editor.length">
                         <editor-block v-for="(item, index) in editor" :key="`editor:${item.path}`"
                             :item="{...item, index: index}" @close-editor="closeEditor" @save-editor="saveEditor"
                             @toggle="toggle" />
@@ -60,12 +60,19 @@
         </div>
     </body>
 
-    <!-- core -->
+    <!-- CORE -->
     <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-router@3.5.1/dist/vue-router.min.js"></script>
     <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
 
-    <!-- app -->
+    <!-- CONFIGS -->
+    <script>
+        var CONFIGS = {
+            apiUrl: 'https://localhost/navigator-api'
+        }
+    </script>
+
+    <!-- APP -->
     <script src="assets/js/app.js" type="module"></script>
 
 </html>

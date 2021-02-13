@@ -1,23 +1,20 @@
-import Icon from './components/Icon.js'
-import FolderItem from './components/FolderItem.js'
-import FileItem from './components/FileItem.js'
-import EditorBlock from './components/EditorBlock.js'
-import BreadcrumbItem from './components/BreadcrumbItem.js'
-
 import router from './router.js'
+import BreadcrumbItem from './components/BreadcrumbItem.js'
+import EditorBlock from './components/EditorBlock.js'
+import FileItem from './components/FileItem.js'
+import Icon from './components/Icon.js'
 
 new Vue({
     el: '#app',
     router,
     components: {
-        Icon,
+        BreadcrumbItem,
         EditorBlock,
-        FolderItem,
         FileItem,
-        BreadcrumbItem
+        Icon,
     },
     data: {
-        apiUrl: 'https://localhost/navigator-api',
+        apiUrl: CONFIGS.apiUrl,
         isLoading: true,
         currentPath: null,
         lastPath: null,
