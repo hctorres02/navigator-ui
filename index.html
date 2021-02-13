@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" class="has-background-light">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Navigator</title>
+        <link rel="dns-prefetch" href="https://unpkg.com">
+        <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.2/css/bulma.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="assets/css/custom.css">
+    </head>
+
+    <body>
+        <div id="app">
+            <div class="p-4">
+                <div class="columns is-multiline">
+                    <div class="column is-5">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-header-title">
+                                    <nav class="breadcrumb">
+                                        <ul>
+                                            <breadcrumb-item v-for="(item, index) in breadcrumbs"
+                                                :key="`breadcrumb:${item.path}`" :item="item"
+                                                :current-path="currentPath">
+                                            </breadcrumb-item>
+                                            <li v-if="isLoading" class="is-active">
+                                                <icon custom="fa-spinner fa-spin" />
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="card-header-icon is-hidden-desktop is-hidden-tablet">
+                                    <a @click.prevent="toggle('stage')">
+                                        <icon custom="fa-chevron-up"></icon>
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="stage" ref="stage" class="has-scroll has-max-height">
+                                <router-link v-for="{name, path} in entities.dir" :to="path"
+                                    :key="`dir:${path}:${name}`" class="panel-block">
+                                    <icon custom="fa-folder-o" type="panel-icon"></icon>
+                                    <span>{{ name }}</span>
+                                </router-link>
+
+                                <file-item v-for="(item, index) in entities.file" :key="`file:${item.path}`"
+                                    :item="item" @view-file="viewFile">
+                                </file-item>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-7">
+                        <editor-block v-for="(item, index) in editor" :key="`editor:${item.path}`"
+                            :item="{...item, index: index}" @close-editor="closeEditor" @save-editor="saveEditor"
+                            @toggle="toggle" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <!-- core -->
+    <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router@3.5.1/dist/vue-router.min.js"></script>
+    <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
+
+    <!-- app -->
+    <script src="assets/js/app.js" type="module"></script>
+
+</html>
