@@ -3,7 +3,7 @@
 }
 
 .has-max-height {
-    height: calc(100vh - 2rem - 48px);
+    height: calc(14 * 41px);
 }
 
 .has-scroll {

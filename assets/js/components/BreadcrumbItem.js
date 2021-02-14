@@ -13,7 +13,7 @@ export default {
             }
         },
         path() {
-            return `/${this.fixPath(this.item.path)}`
+            return `/${this.fixPath(this.item.path, false)}`
         }
     },
     mixins: [FixPath],

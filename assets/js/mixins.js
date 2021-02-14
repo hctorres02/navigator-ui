@@ -1,16 +1,24 @@
-const FixPath = {
-    name: 'Mixin',
-    methods: {
-        fixPath(value) {
-            let SLASH = '/'
+export const Errors = {
+    path_not_found: 'path not found',
+    request_failed: 'failed to request server API'
+}
 
-            if (value.startsWith(SLASH)) {
+export const FixPath = {
+    name: 'FixPath',
+    methods: {
+        fixPath(value, fromRoute = true) {
+            if (!value) {
+                return null
+            }
+
+            if (fromRoute) {
                 value = value.substring(1)
             }
 
-            return value ? value.replace(/\\/g, SLASH) : null
+            let PATTERN = /\\/g
+            let SLASH = '/'
+
+            return value ? value.replace(PATTERN, SLASH) : null
         }
     }
 }
-
-export { FixPath }
