@@ -9,6 +9,11 @@
         <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.2/css/bulma.min.css">
         <link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="assets/css/custom.css">
+        <script>
+            var CONFIGS = {
+                apiUrl: 'https://localhost/navigator-api/'
+            }
+        </script>
     </head>
 
     <body>
@@ -26,7 +31,7 @@
                                                 :current-path="currentPath">
                                             </breadcrumb-item>
                                             <li v-if="isLoading" class="is-active">
-                                                <icon custom="fa-spinner fa-spin" />
+                                                <icon custom="fa-spinner fa-spin"></icon>
                                             </li>
                                         </ul>
                                     </nav>
@@ -37,12 +42,10 @@
                                     </a>
                                 </div>
                             </div>
-                            <div id="stage" ref="stage" class="has-scroll has-max-height">
-                                <router-link v-for="{name, path} in entities.dir" :to="path"
-                                    :key="`dir:${path}:${name}`" class="panel-block">
-                                    <icon custom="fa-folder-o" type="panel-icon"></icon>
-                                    <span>{{ name }}</span>
-                                </router-link>
+                            <message-box v-if="errorMessage" type="is-danger" :body="errorMessage"></message-box>
+                            <div v-else id="stage" ref="stage" class="has-scroll has-max-height">
+                                <folder-item v-for="(item, index) in entities.dir" :item="item"
+                                    :key="`folder:${item.path}:${index}`"></folder-item>
 
                                 <file-item v-for="(item, index) in entities.file" :key="`file:${item.path}`"
                                     :item="item" @view-file="viewFile">
@@ -60,19 +63,9 @@
         </div>
     </body>
 
-    <!-- CORE -->
     <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-router@3.5.1/dist/vue-router.min.js"></script>
     <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
-
-    <!-- CONFIGS -->
-    <script>
-        var CONFIGS = {
-            apiUrl: 'https://localhost/navigator-api'
-        }
-    </script>
-
-    <!-- APP -->
     <script src="assets/js/app.js" type="module"></script>
 
 </html>

@@ -1,3 +1,5 @@
+import { FixPath } from '../mixins.js'
+
 import Icon from './Icon.js'
 
 export default {
@@ -6,14 +8,18 @@ export default {
     props: {
         'item': { type: Object, required: true },
     },
+    mixins: [FixPath],
     computed: {
         icon() {
-            return this.item.name == '..' ? 'fa-level-up' : 'fa-folder-o'
+            return this.item.name == '..' ? 'fa-arrow-up' : 'fa-folder-o'
+        },
+        path() {
+            return `/${this.fixPath(this.item.path)}`
         }
     },
     template: `
-        <a class="panel-block" @click="$emit(item.action, item.path)">
+        <router-link :to="path" class="panel-block">
             <icon :custom="icon" type="panel-icon"></icon>
             <span>{{ item.name }}</span>
-        </a>`
+        </router-link>`
 }

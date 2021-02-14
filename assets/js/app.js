@@ -1,8 +1,13 @@
 import router from './router.js'
+
+import { FixPath } from './mixins.js'
+
 import BreadcrumbItem from './components/BreadcrumbItem.js'
 import EditorBlock from './components/EditorBlock.js'
 import FileItem from './components/FileItem.js'
+import FolderItem from './components/FolderItem.js'
 import Icon from './components/Icon.js'
+import MessageBox from './components/MessageBox.js'
 
 new Vue({
     el: '#app',
@@ -11,32 +16,61 @@ new Vue({
         BreadcrumbItem,
         EditorBlock,
         FileItem,
+        FolderItem,
         Icon,
+        MessageBox
     },
     data: {
         apiUrl: CONFIGS.apiUrl,
-        isLoading: true,
+        breadcrumbs: [],
         currentPath: null,
-        lastPath: null,
-        entities: [],
         editor: [],
-        breadcrumbs: []
+        entities: [],
+        errorMessage: null,
+        errors: {
+            path_not_found: 'path not found',
+            request_failed: 'failed to request server API'
+        },
+        hasError: false,
+        isLoading: true
     },
+    mixins: [FixPath],
     methods: {
         changePath(value) {
-            this.currentPath = value
+            this.currentPath = this.fixPath(value)
         },
-        fetchData(params, callback) {
+        async fetchData(params) {
             this.isLoading = true
-            axios.get(this.apiUrl, { params: params })
-                .then(callback)
+            this.errorMessage = null
+
+            return await axios
+                .get(this.apiUrl, { params })
+                .then(({ data }) => data)
+                .catch(() => this.errorMessage = this.errors.request_failed)
                 .finally(() => this.isLoading = false)
         },
         browserEntities() {
             this.fetchData({
                 mode: 'browser',
                 path: this.currentPath
-            }, this.fillStage)
+            }).then(({ path, entities }) => {
+                this.changePath(path)
+                this.fillBreadcrumbs()
+
+                if (!path) {
+                    this.errorMessage = this.errors.path_not_found
+                    return
+                }
+
+                if (this.currentPath != this.fixPath(this.$route.path)) {
+                    router.push(this.currentPath)
+                }
+
+                this.entities = entities
+                this.$refs.stage.scrollTop = 0
+
+                document.title = `Navigator :: ${path}`
+            })
         },
         viewFile(path) {
             let isOpen = !!this.editor.find(el => el.path == path)
@@ -47,25 +81,8 @@ new Vue({
 
             this.fetchData({
                 mode: 'viewer',
-                path: path
-            }, this.fillEditor)
-        },
-        fillStage({ data }) {
-            if (this.currentPath != data.path) {
-                this.$router.push(data.path)
-            }
-
-            this.entities = data.entities
-            this.directory_separator = data.directory_separator
-            this.$refs.stage.scrollTop = 0
-
-            this.changePath(data.path)
-
-            document.title = `Navigator :: ${data.path}`
-
-        },
-        fillEditor({ data }) {
-            this.editor.push(data)
+                path
+            }).then(data => this.editor.push(data))
         },
         saveEditor(index) {
             // TODO
@@ -75,19 +92,22 @@ new Vue({
             this.editor.splice(index, 1)
         },
         fillBreadcrumbs() {
-            let DL = ':'
-            let UDS = '/'
-            let DS = this.directory_separator || '\\'
-            let EMPTY = ''
-            let items = this.currentPath.replaceAll(DS, UDS).split(UDS)
+            if (!this.currentPath) {
+                return
+            }
 
-            this.breadcrumbs = items
-                .filter(item => DS == item && EMPTY == item ? EMPTY : item)
-                .map((item, index) => {
-                    let path = items.slice(0, index + 1).join(DS)
+            let SLASH = '/'
+            let COLON = ':'
+            let EMPTY = ''
+
+            this.breadcrumbs = this.currentPath
+                .split(SLASH)
+                .filter(item => item != EMPTY)
+                .map((item, index, items) => {
+                    let path = items.slice(0, index + 1).join(SLASH) || SLASH
                     return {
-                        label: item == EMPTY ? DS : item,
-                        path: item == DS ? DS : path.endsWith(DL) ? `${path}${DS}` : path
+                        label: item == EMPTY ? SLASH : item,
+                        path: path.endsWith(COLON) ? path + SLASH : path
                     }
                 })
         },
@@ -96,20 +116,17 @@ new Vue({
         }
     },
     watch: {
-        currentPath(newPath, oldPath) {
-            this.fillBreadcrumbs()
-
-            if (newPath && oldPath == '') {
-                return
-            }
-
+        $route(to) {
+            this.changePath(to.path)
             this.browserEntities()
-        },
-        $route(to, from) {
-            this.changePath(to.params.path)
         }
     },
     mounted() {
-        this.changePath(window.location.hash.replace('#/', ''))
+        let initialPath = window.location.hash.replace('#', '')
+
+        console.log(router)
+
+        this.changePath(initialPath)
+        this.browserEntities()
     }
 })
