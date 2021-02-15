@@ -2,12 +2,15 @@
     border-radius: 0 !important;
 }
 
-.has-max-height {
-    height: calc(14 * 41px);
+.has-custom-height {
+    height: calc(100vh - 2rem);
+    display: flex;
+    flex-direction: column;
 }
 
 .has-scroll {
-    overflow-y: auto;
+    flex: 1;
+    overflow: auto;
 }
 
 .has-scroll::-webkit-scrollbar {

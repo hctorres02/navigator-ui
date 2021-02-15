@@ -9,11 +9,6 @@
         <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.2/css/bulma.min.css">
         <link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="assets/css/custom.css">
-        <script>
-            var CONFIGS = {
-                apiUrl: 'https://localhost/navigator-api/'
-            }
-        </script>
     </head>
 
     <body>
@@ -21,40 +16,10 @@
             <div class="p-4">
                 <div class="columns is-multiline">
                     <aside class="column is-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-header-title">
-                                    <nav class="breadcrumb">
-                                        <ul>
-                                            <breadcrumb-item v-for="(item, index) in breadcrumbs"
-                                                :key="`breadcrumb:${item.path}`" :item="item"
-                                                :current-path="currentPath">
-                                            </breadcrumb-item>
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <div class="card-header-icon">
-                                    <button class="button" @click="toggle('stage')">
-                                        <icon v-if="isLoading" custom="fa-spinner fa-spin"></icon>
-                                        <icon v-else custom="fa-chevron-up"></icon>
-                                    </button>
-                                </div>
-                            </div>
-                            <message-box v-if="errorMessage" type="is-danger" :body="errorMessage"></message-box>
-                            <div v-else id="stage" ref="stage" class="has-scroll has-max-height">
-                                <folder-item v-for="(item, index) in entities.dir" :item="item"
-                                    :key="`folder:${item.path}:${index}`"></folder-item>
-
-                                <file-item v-for="(item, index) in entities.file" :key="`file:${item.path}`"
-                                    :item="item" @view-file="viewFile">
-                                </file-item>
-                            </div>
-                        </div>
+                        <entities-block></entities-block>
                     </aside>
-                    <main class="column is-8" v-if="!!editor.length">
-                        <editor-block v-for="(item, index) in editor" :key="`editor:${item.path}`"
-                            :item="{...item, index: index}" @close-editor="closeEditor" @save-editor="saveEditor"
-                            @toggle="toggle" />
+                    <main class="column is-8">
+                        <editor-block></editor-block>
                     </main>
                 </div>
             </div>
@@ -63,7 +28,13 @@
 
     <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-router@3.5.1/dist/vue-router.min.js"></script>
+    <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.min.js"></script>
     <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
-    <script src="assets/js/app.js" type="module"></script>
+
+    <script>
+        axios.defaults.baseURL = 'https://localhost/navigator-api/'
+    </script>
+
+    <script src="./app/main.js" type="module"></script>
 
 </html>

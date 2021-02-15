@@ -1,14 +1,25 @@
-import Icon from './Icon.js'
+import Icon from './icon.js'
+import { toggle } from '../mixins.js'
 
 export default {
-    name: 'EditorBlock',
+    name: 'EditorItem',
     components: { Icon },
     props: {
         'item': { type: Object, required: true },
     },
     computed: {
         editorId() {
-            return `editor-content-${this.item.index}`
+            return `editor-content-${this.item.path}`
+        }
+    },
+    mixins: [toggle],
+    methods: {
+        closeFile() {
+            this.$store.commit('closeFile', this.item)
+        },
+        saveFile() {
+            // TODO
+            this.closeFile()
         }
     },
     template: `
@@ -20,27 +31,21 @@ export default {
                     </div>
                     <div class="card-header-icon">
                         <div class="buttons has-addons">
-                            <a class="button" @click="$emit('save-editor', item.index)" v-if="item.isWritable">
+                            <a class="button" @click="saveFile" v-if="item.isWritable">
                                 <icon custom="fa-save"></icon>
                             </a>
-                            <a class="button" @click="$emit('toggle', editorId)">
+                            <a class="button" @click="toggle(editorId)">
                                 <icon custom="fa-minus"></icon>
                             </a>
-                            <a class="button" @click="$emit('close-editor', item.index)">
+                            <a class="button" @click="closeFile">
                                 <icon custom="fa-times"></icon>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="card-content" :id="editorId">
+                <div :id="editorId" class="card-content">
                     <div class="field">
-                    <textarea class="textarea is-fullwidth is-small has-scroll" rows="10" v-model="item.contents" placeholder="file empty"></textarea>
-                    </div>
-                    <div class="field is-grouped is-grouped-right">
-                        <div class="control">
-                        </div>
-                        <div class="control">
-                        </div>
+                       <textarea  v-model="item.contents" class="textarea is-fullwidth is-small has-scroll" rows="10" placeholder="file empty" ></textarea>
                     </div>
                 </div>
             </div>
