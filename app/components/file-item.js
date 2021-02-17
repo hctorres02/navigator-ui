@@ -1,6 +1,7 @@
 import Icon from './icon.js'
 
-import { editorClient } from '../api/editor-client.js'
+import { httpGet } from '../api/http-client.js'
+import { errors } from '../mixins.js'
 
 export default {
     name: 'FileItem',
@@ -8,20 +9,22 @@ export default {
     props: {
         'item': { type: Object, required: true },
     },
-    mixins: [editorClient],
+    mixins: [errors, httpGet],
     methods: {
-        open() {
-            let isOpen = !!this.$store.state.editor.find(el => el == this.item)
+        openFile() {
+            let isOpen = !!this.$store.state.editor.find(el => el.path == this.item.path)
 
             if (isOpen) {
                 return
             }
 
-            this.openFile(this.item.path)
+            this.httpGet('viewer', this.item.path)
+                .then(data => this.$store.commit('editorAdd', data))
+                .catch(error => this.$store.commit('error', error.response.data))
         }
     },
     template: `
-        <a class="panel-block" @click="open()">
+        <a class="panel-block" @click="openFile">
             <icon custom="fa-code" type="panel-icon"></icon>
             <span>{{ item.name }}</span>
         </a>`

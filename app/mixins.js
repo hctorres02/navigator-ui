@@ -3,6 +3,7 @@ export const errors = {
     data() {
         return {
             errors: {
+                cant_open_file: 'can\'t open file',
                 path_not_found: 'path not found',
                 request_failed: 'failed to request server API'
             }
@@ -13,21 +14,39 @@ export const errors = {
 export const fixPath = {
     name: 'fixPath',
     methods: {
-        fixPath(value, fromRoute = true) {
+        fixPath(value, keepCollon = true) {
             if (!value) {
                 return null
             }
 
-            if (fromRoute) {
-                value = value.substring(1)
+            let COLLON = ':'
+            let EMPTY = ''
+            let SLASH = '/'
 
-                return this.fixPath(value, false)
+            if (value.startsWith(SLASH)) {
+                value = value.substring(1)
             }
 
-            let SLASH = '/'
-            let EMPTY = ''
+            if (!keepCollon) {
+                value = value.replace(COLLON, EMPTY)
+            }
 
-            return value.replace(/\\/g, SLASH).replace(/\/+$/, EMPTY)
+            return value.replace(/\\+/g, SLASH).replace(/\/+$/, EMPTY)
+        }
+    }
+}
+
+export const prepareRequest = {
+    name: 'prepareRequest',
+    mixins: [fixPath],
+    methods: {
+        prepareRequest(mode, path) {
+            this.$store.commit('isLoading', true)
+            this.$store.commit('error', [])
+
+            path = this.fixPath(path, false)
+
+            return `${mode}/${path}`;
         }
     }
 }

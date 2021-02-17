@@ -1,4 +1,7 @@
 import Icon from './icon.js'
+
+import { httpPost } from '../api/http-client.js'
+import { commitError } from '../store/mixins.js'
 import { toggle } from '../mixins.js'
 
 export default {
@@ -12,14 +15,15 @@ export default {
             return `editor-content-${this.item.path}`
         }
     },
-    mixins: [toggle],
+    mixins: [commitError, httpPost, toggle],
     methods: {
         closeFile() {
-            this.$store.commit('closeFile', this.item)
+            this.$store.commit('editorRemove', this.item)
         },
         saveFile() {
-            // TODO
-            this.closeFile()
+            this.httpPost('writer', this.item.path, this.item.content)
+                .then(this.closeFile)
+                .catch(this.commitError)
         }
     },
     template: `
@@ -31,21 +35,21 @@ export default {
                     </div>
                     <div class="card-header-icon">
                         <div class="buttons has-addons">
-                            <a class="button" @click="saveFile" v-if="item.isWritable">
+                            <button class="button is-ghost" @click="saveFile" v-if="item.isWritable">
                                 <icon custom="fa-save"></icon>
-                            </a>
-                            <a class="button" @click="toggle(editorId)">
+                            </button>
+                            <button class="button is-ghost" @click="toggle(editorId)">
                                 <icon custom="fa-minus"></icon>
-                            </a>
-                            <a class="button" @click="closeFile">
+                            </button>
+                            <button class="button is-ghost" @click="closeFile">
                                 <icon custom="fa-times"></icon>
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
                 <div :id="editorId" class="card-content">
-                    <div class="field">
-                       <textarea  v-model="item.contents" class="textarea is-fullwidth is-small has-scroll" rows="10" placeholder="file empty" ></textarea>
+                    <div class="field"  style="height:100% !impotant">
+                       <textarea  v-model="item.contents" class="textarea is-fullwidth is-small has-scroll" rows="16" placeholder="file empty" ></textarea>
                     </div>
                 </div>
             </div>

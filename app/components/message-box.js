@@ -1,11 +1,10 @@
 export default {
     name: 'MessageBox',
     props: {
-        body: { type: String, required: true },
-        type: { type: String, required: false, default: '' }
+        type: { type: String, default: '' }
     },
     template: `
-    <div class="message" :class="type">
-        <div class="message-body">{{ body }}</div>
+    <div class="panel-block" :class="type">
+        <slot></slot>
     </div>`
 }

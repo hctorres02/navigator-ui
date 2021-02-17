@@ -14,7 +14,7 @@ export default {
             return this.item.name == '..' ? 'fa-arrow-up' : 'fa-folder-o'
         },
         path() {
-            return `/${this.fixPath(this.item.path, false)}`
+            return `/${this.fixPath(this.item.path)}`
         }
     },
     template: `

@@ -1,8 +1,5 @@
 import router from './router.js'
-import store from './store.js'
-
-import { entitiesClient } from './api/entities-client.js'
-import { errors, fixPath } from './mixins.js'
+import store from './store/index.js'
 
 import EditorBlock from './components/editor-block.js'
 import EntitiesBlock from './components/entities-block.js'
@@ -12,27 +9,16 @@ new Vue({
     el: '#app',
     router,
     store,
-    data: {
-        lastPath: null
-    },
-    components: {
-        EditorBlock,
-        EntitiesBlock
-    },
-    mixins: [entitiesClient, fixPath],
-    watch: {
-        $route: {
-            immediate: true,
-            handler(to, from) {
-                let toPath = this.fixPath(to.path)
-                this.browserEntities(toPath)
-            }
-        }
-    },
-    mounted() {
-        let initialPath = window.location.hash.replace('#', '')
-        initialPath = this.fixPath(initialPath)
-
-        this.browserEntities(initialPath)
-    },
+    components: { EditorBlock, EntitiesBlock },
+    template: `
+        <div class="p-4">
+            <div class="columns is-multiline">
+                <aside class="column">
+                    <entities-block></entities-block>
+                </aside>
+                <main class="column is-7" v-if="!!$store.state.editor.length">
+                    <editor-block></editor-block>
+                </main>
+            </div>
+        </div>`
 })

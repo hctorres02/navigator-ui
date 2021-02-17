@@ -3,14 +3,14 @@
 }
 
 .has-custom-height {
-    height: calc(100vh - 2rem);
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 2rem);
 }
 
 .has-scroll {
     flex: 1;
-    overflow: auto;
+    overflow-y: auto;
 }
 
 .has-scroll::-webkit-scrollbar {
