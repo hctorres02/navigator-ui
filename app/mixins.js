@@ -1,19 +1,18 @@
-export const errors = {
-    name: 'errors',
-    data() {
-        return {
-            errors: {
-                cant_open_file: 'can\'t open file',
-                path_not_found: 'path not found',
-                request_failed: 'failed to request server API'
-            }
-        }
-    }
-}
-
-export const fixPath = {
-    name: 'fixPath',
+const mixins = {
+    name: 'mixins',
     methods: {
+        toggle(target) {
+            document.getElementById(target).classList.toggle('is-hidden')
+        },
+        prepareRequest(path) {
+            this.commitIsLoading()
+            this.commitError(null)
+            this.commitSuccess(null)
+
+            path = this.fixPath(path, false)
+
+            return `/${path}`;
+        },
         fixPath(value, keepCollon = true) {
             if (!value) {
                 return null
@@ -32,30 +31,34 @@ export const fixPath = {
             }
 
             return value.replace(/\\+/g, SLASH).replace(/\/+$/, EMPTY)
+        },
+        fileIsOpen(path) {
+            return !!this.$store.state.editor.find(el => el.path == path)
+        },
+
+        // STORE
+        commitCurrentPath(value) {
+            this.$store.commit('currentPath', value)
+        },
+        commitEntities(value) {
+            this.$store.commit('entities', value)
+        },
+        commitOpenFile(value) {
+            this.$store.commit('openFile', value)
+        },
+        commitCloseFile(value) {
+            this.$store.commit('closeFile', value)
+        },
+        commitError(value) {
+            this.$store.commit('errorMessage', value)
+        },
+        commitSuccess(value) {
+            this.$store.commit('successMessage', value)
+        },
+        commitIsLoading() {
+            this.$store.commit('isLoading', !this.$store.state.isLoading)
         }
     }
 }
 
-export const prepareRequest = {
-    name: 'prepareRequest',
-    mixins: [fixPath],
-    methods: {
-        prepareRequest(mode, path) {
-            this.$store.commit('isLoading', true)
-            this.$store.commit('error', [])
-
-            path = this.fixPath(path, false)
-
-            return `${mode}/${path}`;
-        }
-    }
-}
-
-export const toggle = {
-    name: 'toggle',
-    methods: {
-        toggle(target) {
-            document.getElementById(target).classList.toggle('is-hidden')
-        }
-    }
-}
+export default mixins

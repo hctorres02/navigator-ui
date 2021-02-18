@@ -1,5 +1,5 @@
 import router from './router.js'
-import store from './store/index.js'
+import store from './store.js'
 
 import EditorBlock from './components/editor-block.js'
 import EntitiesBlock from './components/entities-block.js'

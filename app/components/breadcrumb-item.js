@@ -1,10 +1,11 @@
-import { fixPath } from '../mixins.js'
+import mixins from '../mixins.js'
 
 export default {
     name: 'BreadcrumbItem',
     props: {
         'item': { type: Object, required: true }
     },
+    mixins,
     computed: {
         isActive() {
             return {
@@ -15,7 +16,6 @@ export default {
             return `/${this.fixPath(this.item.path)}`
         }
     },
-    mixins: [fixPath],
     template: `
         <li :class="isActive">
             <router-link :to="path">

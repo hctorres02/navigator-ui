@@ -1,16 +1,13 @@
-import BreadcrumbBlock from './breadcrumb-block.js'
 import FileItem from './file-item.js'
 import FolderItem from './folder-item.js'
 import Icon from './icon.js'
 
-import { httpGet } from '../api/http-client.js'
-import { commitError, commitCurrentPath, commitBreadcrumbs, commitEntities } from '../store/mixins.js'
-import { toggle } from '../mixins.js'
+import httpClient from '../api/http-client.js'
 
 export default {
     name: 'EntitiesBlock',
-    components: { BreadcrumbBlock, FileItem, FolderItem, Icon },
-    mixins: [commitError, commitCurrentPath, commitBreadcrumbs, commitEntities, httpGet, toggle],
+    components: { FileItem, FolderItem, Icon },
+    mixins: [httpClient],
     created() {
         let initialPath = window.location.hash.replace('#/', '')
 
@@ -34,17 +31,22 @@ export default {
                 return
             }
 
-            this.httpGet('browser', next)
-                .then(({ path, entities }) => {
-                    let received = this.fixPath(path)
+            this.httpGet(next)
+                .then(data => {
+                    if (!data.isDir) {
+                        this.commitOpenFile(data)
+                        this.browserEntities(data.dirname)
+                        return;
+                    }
+
+                    let received = this.fixPath(data.path)
 
                     if (received != routePath) {
                         this.$router.push({ path: `/${received}` })
                     }
 
                     this.commitCurrentPath(received)
-                    this.commitBreadcrumbs(received)
-                    this.commitEntities(entities)
+                    this.commitEntities(data.data)
                 })
                 .catch(this.commitError)
         },
@@ -61,7 +63,7 @@ export default {
                 <div class="card-header-icon">
                     <div class="field has-addons">
                         <div class="control">
-                            <button class="button is-ghost" @click="toggle('stage'); compact('stage-container');">
+                            <button class="button is-white" @click="toggle('stage'); compact('stage-container');">
                                 <icon custom="fa-chevron-up"></icon>
                             </button>
                         </div>

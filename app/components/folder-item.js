@@ -1,6 +1,6 @@
-import { fixPath } from '../mixins.js'
-
 import Icon from './icon.js'
+
+import mixins from '../mixins.js'
 
 export default {
     name: 'FolderItem',
@@ -8,7 +8,7 @@ export default {
     props: {
         'item': { type: Object, required: true },
     },
-    mixins: [fixPath],
+    mixins: [mixins],
     computed: {
         icon() {
             return this.item.name == '..' ? 'fa-arrow-up' : 'fa-folder-o'
