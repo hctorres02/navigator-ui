@@ -26,9 +26,8 @@ export default {
             window.open(url, '_self')
         },
         saveFile() {
-            this.httpPost(this.item)
+            this.httpPut(this.item)
                 .then(this.commitSuccess)
-                .then(this.closeFile)
                 .catch(this.commitError)
         }
     },

@@ -21,9 +21,14 @@ const mixins = {
             let COLLON = ':'
             let EMPTY = ''
             let SLASH = '/'
+            let QUESTION = '?'
 
             if (value.startsWith(SLASH)) {
                 value = value.substring(1)
+            }
+
+            if (value.indexOf(QUESTION) > -1) {
+                value = value.substring(0, value.indexOf(QUESTION))
             }
 
             if (!keepCollon) {
@@ -33,7 +38,7 @@ const mixins = {
             return value.replace(/\\+/g, SLASH).replace(/\/+$/, EMPTY)
         },
         fileIsOpen(path) {
-            return !!this.$store.state.editor.find(el => el.path == path)
+            return !!this.$store.state.editor.find(el => this.fixPath(el.path) == this.fixPath(path))
         },
 
         // STORE

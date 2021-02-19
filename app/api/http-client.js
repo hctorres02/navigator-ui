@@ -23,6 +23,20 @@ const httpClient = {
                 .then(({ data }) => data)
                 .finally(this.commitIsLoading)
         },
+        httpPut(item) {
+            let url = this.prepareRequest(item.path)
+
+            return httpBase.put(url, item)
+                .then(({ data }) => data)
+                .finally(this.commitIsLoading)
+        },
+        httpDelete(item) {
+            let url = this.prepareRequest(item.path)
+
+            return httpBase.delete(url)
+                .then(({ data }) => data)
+                .finally(this.commitIsLoading)
+        },
     }
 }
 

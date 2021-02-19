@@ -23,7 +23,7 @@ export default {
         }
     },
     methods: {
-        browserEntities(next) {
+        browserEntities(to) {
             let routePath = this.fixPath(this.$route.path)
             let currentPath = this.$store.state.currentPath
 
@@ -31,22 +31,25 @@ export default {
                 return
             }
 
-            this.httpGet(next)
-                .then(data => {
-                    if (!data.isDir) {
-                        this.commitOpenFile(data)
-                        this.browserEntities(data.dirname)
+            this.httpGet(to)
+                .then(entity => {
+                    if (!entity.isDir) {
+                        if (!this.fileIsOpen(entity.path)) {
+                            this.commitOpenFile(entity)
+                        }
+
+                        this.browserEntities(entity.dirname)
                         return;
                     }
 
-                    let received = this.fixPath(data.path)
+                    let received = this.fixPath(entity.path)
 
                     if (received != routePath) {
-                        this.$router.push({ path: `/${received}` })
+                        this.$router.push(`/${received}`)
                     }
 
                     this.commitCurrentPath(received)
-                    this.commitEntities(data.data)
+                    this.commitEntities(entity.data)
                 })
                 .catch(this.commitError)
         },
