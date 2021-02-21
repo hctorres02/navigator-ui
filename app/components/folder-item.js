@@ -11,15 +11,18 @@ export default {
     mixins: [mixins],
     computed: {
         icon() {
-            return this.item.name == '..' ? 'fa-arrow-up' : 'fa-folder-o'
+            return this.item.name == '..' ? 'fa-arrow-up' : this.item.isReadable ? 'fa-folder-o' : 'fa-ban'
         },
         path() {
             return `/${this.fixPath(this.item.path)}`
+        },
+        blocked() {
+            return { 'has-text-danger': !this.item.isReadable }
         }
     },
     template: `
-        <router-link :to="path" class="panel-block">
-            <icon :custom="icon" type="panel-icon"></icon>
-            <span>{{ item.name }}</span>
-        </router-link>`
+    <router-link :to="path" class="panel-block" :class="blocked">
+        <icon :custom="icon" type="panel-icon"></icon>
+        <span>{{ item.name }}</span>
+    </router-link>`
 }

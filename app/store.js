@@ -4,10 +4,8 @@ export default new Vuex.Store({
         currentPath: null,
         editor: [],
         entities: [],
-        messages: {
-            error: null,
-            success: null
-        },
+        errorMessage: null,
+        successMessage: null,
         isLoading: true
     },
     mutations: {
@@ -24,10 +22,10 @@ export default new Vuex.Store({
             state.editor.push(value)
         },
         errorMessage(state, value) {
-            state.messages.error = value
+            state.errorMessage = value
         },
         successMessage(state, value) {
-            state.messages.success = value
+            state.successMessage = value
         },
         isLoading(state, value) {
             state.isLoading = value

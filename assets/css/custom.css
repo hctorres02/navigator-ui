@@ -2,22 +2,51 @@
     border-radius: 0 !important;
 }
 
+html, body {
+    overflow-y: auto;
+}
+
+aside {
+    width: 25vw;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 29;
+}
+
+aside .panel {
+    width: 100%;
+}
+
+main {
+    width: 100%
+}
+
+.navbar-burger {
+    margin-left: 0;
+}
+
 .has-custom-height {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 2rem);
+    height: calc(100vh - 3.25rem);
 }
 
 .has-scroll {
-    flex: 1;
     overflow-y: auto;
 }
 
 .has-scroll::-webkit-scrollbar {
-    height: 10px;
-    width: 10px;
+    height: 8px;
+    width: 8px;
 }
 
 .has-scroll::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2)
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 1s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }

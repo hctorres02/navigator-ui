@@ -27,16 +27,52 @@ const httpClient = {
             let url = this.prepareRequest(item.path)
 
             return httpBase.put(url, item)
-                .then(({ data }) => data)
                 .finally(this.commitIsLoading)
         },
         httpDelete(item) {
             let url = this.prepareRequest(item.path)
 
             return httpBase.delete(url)
-                .then(({ data }) => data)
                 .finally(this.commitIsLoading)
         },
+        browserEntities(to) {
+            let routePath = this.fixPath(this.$route.path)
+            let currentPath = this.$store.state.currentPath
+
+            if (routePath && routePath == currentPath) {
+                return
+            }
+
+            this.httpGet(to)
+                .then(entity => {
+
+                    if (!entity) {
+                        throw new Error(`Can't not load '${to}'`)
+                    }
+
+                    if (entity.dirname && !entity.isDir) {
+                        if (!this.fileIsOpen(entity.path)) {
+                            this.commitOpenFile(entity)
+                        }
+
+                        this.browserEntities(entity.dirname)
+                        return;
+                    }
+
+                    let received = this.fixPath(entity.path)
+
+                    if (received != routePath) {
+                        this.$router.push(`/${received}`)
+                    }
+
+                    this.commitCurrentPath(received)
+                    this.commitEntities(entity.data)
+
+                    document.getElementById('stage').scrollTo(0, 0)
+
+                })
+                .catch(this.commitError)
+        }
     }
 }
 

@@ -15,14 +15,27 @@ export default {
                 return;
             }
 
+            if (!this.item.isReadable) {
+                this.commitError('Can\'t open this file')
+                return
+            }
+
             this.httpGet(this.item.path)
                 .then(this.commitOpenFile)
                 .catch(this.commitError)
         }
     },
+    computed: {
+        blocked() {
+            return { 'has-text-danger': !this.item.isReadable }
+        },
+        icon() {
+            return this.item.isReadable ? 'fa-code' : 'fa-ban'
+        }
+    },
     template: `
-        <a class="panel-block" @click="openFile">
-            <icon custom="fa-code" type="panel-icon"></icon>
-            <span>{{ item.name }}</span>
-        </a>`
+    <a @click="openFile" class="panel-block" :class="blocked">
+        <icon :custom="icon" type="panel-icon"></icon>
+        <span>{{ item.name }}</span>
+    </a>`
 }
