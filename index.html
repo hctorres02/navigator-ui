@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="has-background-light has-navbar-fixed-top has-custom-height">
+<html lang="en">
 
     <head>
         <meta charset="UTF-8">
@@ -11,48 +11,22 @@
         <link rel="stylesheet" href="assets/css/custom.css">
     </head>
 
-    <body class="has-custom-height">
+    <body>
         <div id="app"></div>
-    </body>
 
-    <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router@3.5.1/dist/vue-router.min.js"></script>
-    <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.min.js"></script>
-    <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
+        <script src="https://unpkg.com/vue-router@3.5.1/dist/vue-router.min.js"></script>
+        <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.min.js"></script>
+        <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
 
-    <script>
-        const appConfig = {
-            home_dir: 'C:/htdocs/navigator-ui',
-            api_url: 'https://localhost/navigator-api/'
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-
-            // Get all "navbar-burger" elements
-            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-            // Check if there are any navbar burgers
-            if ($navbarBurgers.length > 0) {
-
-                // Add a click event on each of them
-                $navbarBurgers.forEach(el => {
-                    el.addEventListener('click', () => {
-
-                        // Get the target from the "data-target" attribute
-                        const target = el.dataset.target;
-                        const $target = document.getElementById(target);
-
-                        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-                        el.classList.toggle('is-active');
-                        $target.classList.toggle('is-active');
-
-                    });
-                });
+        <script>
+            const appConfig = {
+                home_dir: 'C:/htdocs/navigator-ui',
+                api_url: 'https://localhost/navigator-api/'
             }
+        </script>
 
-        });
-    </script>
-
-    <script src="./app/main.js" type="module"></script>
+        <script src="./app/main.js" type="module"></script>
+    </body>
 
 </html>

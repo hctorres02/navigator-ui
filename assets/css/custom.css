@@ -1,52 +1,64 @@
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, .2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, .5);
+}
+
 * {
     border-radius: 0 !important;
 }
 
-html, body {
-    overflow-y: auto;
+body {
+    font-family: Ubuntu, sans-serif;
 }
 
 aside {
-    width: 25vw;
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    z-index: 29;
-}
-
-aside .panel {
+    z-index: 50;
     width: 100%;
 }
 
-main {
-    width: 100%
+.is-overlay {
+    left: auto;
 }
 
-.navbar-burger {
-    margin-left: 0;
-}
-
-.has-custom-height {
-    height: calc(100vh - 3.25rem);
+.is-fullheight {
+    height: 100vh;
 }
 
 .has-scroll {
     overflow-y: auto;
 }
 
-.has-scroll::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
+.navbar-brand {
+    border-left: .75rem hsl(141, 71%, 48%) solid
 }
 
-.has-scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2)
+.field:nth-last-of-type(2) {
+    margin-bottom: 0 !important;
 }
 
-.fade-enter-active, .fade-leave-active {
-    transition: opacity 1s;
+.field:last-child {
+    margin-top: .75rem;
 }
 
-.fade-enter, .fade-leave-to {
-    opacity: 0;
+.table .is-1 {
+    width: 20px;
+}
+
+.table .is-2 {
+    width: 7rem;
+}
+
+.dropdown-menu {
+    min-width: auto;
 }

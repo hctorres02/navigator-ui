@@ -1,50 +1,80 @@
+import Navbar from './components/navbar.js'
+import Sidebar from './components/sidebar/sidebar.js'
+import Searchbar from './components/searchbar.js'
+import Datatable from './components/datatable/datatable.js'
+
 import router from './router.js'
-import store from './store.js'
+import store from './store/store.js'
+import mixins from './mixins.js'
 
-import EditorBlock from './components/editor-block.js'
-import SidebarBlock from './components/sidebar-block.js'
+const components = {
+    Navbar,
+    Sidebar,
+    Searchbar,
+    Datatable
+}
 
-import httpClient from './api/http-client.js'
+const methods = {
+    ...Vuex.mapActions([
+        'setState', 'setMessage'
+    ])
+}
+
+const computed = {
+    ...Vuex.mapGetters([
+        'stateErrors', 'stateIsSidebarOpen'
+    ])
+}
 
 new Vue({
-    name: 'NavigatorUI',
+    name: 'Navigator',
     el: '#app',
     router,
     store,
-    mixins: [httpClient],
-    components: { EditorBlock, SidebarBlock },
-    created() {
-        let initialPath = window.location.hash.replace('#/', '')
+    components,
+    computed,
+    methods,
+    mixins,
+    mounted() {
+        let previousUri = window.location.hash.replace('#/', '')
+        let path = this.fixPath(previousUri || appConfig.home_dir)
 
-        if (!initialPath) {
-            initialPath = appConfig.home_dir
-        }
-
-        this.browserEntities(initialPath)
+        this.setState(path)
     },
     watch: {
         $route(to) {
-            this.browserEntities(to.path)
+            let path = this.fixPath(to.path)
+
+            if (path) {
+                this.setState(path)
+            }
         }
     },
     template: `
-    <div class="">
-        <nav class="navbar is-dark is-fixed-top">
-            <div class="navbar-brand">
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="stage-container">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-                <a class="navbar-item" href="https://bulma.io">
-                    <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
-                </a>
+    <div class="px-4">
+        <header class="container mb-6">
+            <navbar></navbar>
+        </header>
+        <aside
+            class="is-overlay is-fullheight has-scroll has-background-primary"
+            :class="{ 'is-hidden': !stateIsSidebarOpen }">
+            <sidebar></sidebar>
+        </aside>
+        <main class="container">
+            <searchbar></searchbar>
+
+            <div
+                v-for="message in stateErrors"
+                :key="message.path"
+                class="message">
+                <div class="message-body">
+                    <p>{{ message.status }} - {{ message.statusText }}</p>
+                    <p></p>
+                </div>
             </div>
-        </nav>
-        <div class="is-flex is-flex-direction-row is-align-items-start has-custom-height has-scroll">
-            <sidebar-block></sidebar-block>
-            <editor-block></editor-block>
-        </div>
+
+            <datatable></datatable>
+        </main>
     </div>
     `
 })
