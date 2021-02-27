@@ -1,5 +1,5 @@
 const mutations = {
-    SET_STATE: (state, current) => {
+    SET_DATA: (state, current) => {
         Object.assign(state, current)
     },
     SET_MESSAGE: (state, message) => {

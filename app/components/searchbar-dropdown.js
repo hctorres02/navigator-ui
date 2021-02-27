@@ -7,7 +7,7 @@ const components = {
 
 const computed = {
     ...Vuex.mapGetters([
-        'stateIsReadable'
+        'isWritable'
     ])
 }
 

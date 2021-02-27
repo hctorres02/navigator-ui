@@ -1,6 +1,7 @@
 import Navbar from './components/navbar.js'
 import Sidebar from './components/sidebar/sidebar.js'
 import Searchbar from './components/searchbar.js'
+import MessageBox from './components/message-box.js'
 import Datatable from './components/datatable/datatable.js'
 
 import router from './router.js'
@@ -11,19 +12,19 @@ const components = {
     Navbar,
     Sidebar,
     Searchbar,
+    MessageBox,
     Datatable
 }
 
 const methods = {
-    ...Vuex.mapActions([
-        'setState', 'setMessage'
-    ])
+    ...Vuex.mapActions({
+        setData: 'datatable/setData',
+        setError: 'message/setError'
+    })
 }
 
 const computed = {
-    ...Vuex.mapGetters([
-        'stateErrors', 'stateIsSidebarOpen'
-    ])
+    ...Vuex.mapGetters('editor', ['isVisible'])
 }
 
 new Vue({
@@ -38,41 +39,36 @@ new Vue({
     mounted() {
         let previousUri = window.location.hash.replace('#/', '')
         let path = this.fixPath(previousUri || appConfig.home_dir)
+        let routePath = this.fixPath(this.$route.path)
 
-        this.setState(path)
+        if (routePath != path) {
+            this.$router.push(`/${path}`)
+        }
+
+        this.setData(path)
     },
     watch: {
         $route(to) {
             let path = this.fixPath(to.path)
 
             if (path) {
-                this.setState(path)
+                this.setData(path)
             }
         }
     },
     template: `
     <div class="px-4">
-        <header class="container mb-6">
+        <header class="container block">
             <navbar></navbar>
         </header>
         <aside
             class="is-overlay is-fullheight has-scroll has-background-primary"
-            :class="{ 'is-hidden': !stateIsSidebarOpen }">
+            :class="{ 'is-hidden': !isVisible }">
             <sidebar></sidebar>
         </aside>
         <main class="container">
             <searchbar></searchbar>
-
-            <div
-                v-for="message in stateErrors"
-                :key="message.path"
-                class="message">
-                <div class="message-body">
-                    <p>{{ message.status }} - {{ message.statusText }}</p>
-                    <p></p>
-                </div>
-            </div>
-
+            <message-box></message-box>
             <datatable></datatable>
         </main>
     </div>

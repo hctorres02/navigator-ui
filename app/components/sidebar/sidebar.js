@@ -5,15 +5,13 @@ const components = {
 }
 
 const methods = {
-    ...Vuex.mapActions([
-        'closeSidebar'
-    ])
+    ...Vuex.mapActions({
+        closeSidebar: 'editor/hideEditor'
+    })
 }
 
 const computed = {
-    ...Vuex.mapGetters([
-        'stateEditor'
-    ])
+    ...Vuex.mapGetters('editor', ['entities'])
 }
 
 export default {
@@ -22,8 +20,8 @@ export default {
     computed,
     methods,
     watch: {
-        stateEditor() {
-            if (this.stateEditor.length == 0) {
+        entities() {
+            if (this.entities.length == 0) {
                 this.closeSidebar()
             }
         }
@@ -39,7 +37,7 @@ export default {
         </button>
         <div class="is-clearfix"></div>
         <sidebar-item
-            v-for="entity in stateEditor"
+            v-for="entity in entities"
             :key="entity.id"
             :entity="entity">
         </sidebar-item>

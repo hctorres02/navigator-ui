@@ -1,12 +1,25 @@
 const getters = {
-    stateData: state => state.data,
-    statePath: state => state.path,
-    stateIsWritable: state => state.isWritable,
-    stateIsLoading: state => state.isLoading,
-    stateIsSidebarOpen: state => state.isSidebarOpen,
-    stateErrors: state => state.messages.filter(msg => msg.isError),
-    stateSuccess: state => state.messages.filter(msg => !msg.isError),
-    stateEditor: state => state.editor
+    data: state => {
+        return state.data
+    },
+    path: state => {
+        return state.path
+    },
+    isWritable: state => {
+        return state.isWritable
+    },
+    isLoading: state => {
+        return state.isLoading
+    },
+    isSidebarOpen: state => {
+        return state.isSidebarOpen
+    },
+    editor: state => {
+        return state.editor
+    },
+    message: state => {
+        return state.message
+    },
 }
 
 export default getters

@@ -6,12 +6,12 @@ import {
 } from '../api/http-client.js'
 
 const actions = {
-    setState: async ({ commit, dispatch }, uri) => {
+    setData: async ({ commit, dispatch }, uri) => {
         try {
             let response = await httpGet(uri)
             let { data, path, isWritable } = response.data
 
-            commit('SET_STATE', { data, path, isWritable })
+            commit('SET_DATA', { data, path, isWritable })
         }
         catch (e) {
             dispatch('setError', { uri, ...e.response })

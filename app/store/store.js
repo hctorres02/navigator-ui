@@ -1,28 +1,15 @@
-import actions from './actions.js'
-import getters from './getters.js'
-import mutations from './mutations.js'
+import datatable from './modules/datatable.js'
+import editor from './modules/editor.js'
+import message from './modules/message.js'
+
+const modules = {
+    datatable,
+    editor,
+    message
+}
 
 const store = new Vuex.Store({
-    state: {
-
-        //
-        data: [],
-        path: null,
-        isWritable: null,
-
-        //
-        isLoading: false,
-
-        //
-        isSidebarOpen: false,
-        editor: [],
-
-        //
-        messages: [],
-    },
-    actions,
-    getters,
-    mutations
+    modules
 })
 
 export default store

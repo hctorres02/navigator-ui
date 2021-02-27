@@ -1,13 +1,18 @@
 import DatatableRow from './datatable-row.js'
 
+const components = {
+    DatatableRow
+}
+const computed = {
+    ...Vuex.mapGetters({
+        entities: 'datatable/data'
+    })
+}
+
 export default {
     name: 'Datatable',
-    components: { DatatableRow },
-    computed: {
-        ...Vuex.mapGetters([
-            'stateData'
-        ])
-    },
+    components,
+    computed,
     template: `
     <table class="table is-fullwidth is-hoverable mb-6">
         <thead>
@@ -31,7 +36,7 @@ export default {
         </thead>
         <tbody>
             <datatable-row
-                v-for="entity in stateData"
+                v-for="entity in entities"
                 :key="entity.id"
                 :entity="entity"
             ></datatable-row>

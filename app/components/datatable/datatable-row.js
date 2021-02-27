@@ -9,9 +9,7 @@ const props = {
     entity: { type: Object, required: true }
 }
 const methods = {
-    ...Vuex.mapActions([
-        'openFile'
-    ])
+    ...Vuex.mapActions('editor', ['openFile'])
 }
 
 const DatatableRow = {
@@ -34,7 +32,9 @@ const DatatableRow = {
             <input type="checkbox" class="checkbox">
         </td>
         <td class="is-6">
-            <router-link v-if="entity.isDir" :to="fixedPath">
+            <router-link
+                v-if="entity.isDir"
+                :to="fixedPath">
                 {{ entity.name }}
             </router-link>
             <a v-else @click="openFile(entity)">
@@ -42,7 +42,7 @@ const DatatableRow = {
             </a>
         </td>
         <td>
-            {{ entity.isDir }}
+            {{ entity.isDir ? 'diretório' : 'arquivo' }}
         </td>
         <td class="is-hidden-touch">
             {{ (Math.random() * 100000).toFixed() }}
