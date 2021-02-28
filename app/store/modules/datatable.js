@@ -1,17 +1,34 @@
-import { httpGet } from '../../api/http-client.js'
+import { httpGet, httpStatus } from '../../api/http-client.js'
+import { fixPath } from '../../mixins.js'
+
+export const types = {
+    setData: 'setData',
+    SET_DATA: 'SET_DATA'
+}
 
 const actions = {
-    setData: async ({ commit, dispatch }, uri) => {
-        try {
-            let response = await httpGet(uri)
-            let { data, path, isWritable } = response.data
+    async setData({ commit, dispatch }, path) {
+        let fixedPath = fixPath(path)
 
-            commit('SET_DATA', { data, path, isWritable })
+        try {
+            let response = await httpGet(fixedPath)
+            let entity = response.data
+
+            if (!entity.isDir) {
+                dispatch('editor/openFile', entity, { root: true })
+                dispatch(types.setData, entity.dirname)
+                return
+            }
+
+            commit(types.SET_DATA, entity)
         }
         catch (e) {
+            console.log(e)
             let message = {
-                path: uri,
-                body: e.response.statusText
+                path: fixedPath,
+                body: e.response && e.response.status
+                    ? httpStatus[e.response.status]
+                    : httpStatus[999]
             }
 
             dispatch('message/setError', message, { root: true })
@@ -20,30 +37,32 @@ const actions = {
 }
 
 const getters = {
-    data: state => {
+    data(state) {
         return state.data
     },
-    path: state => {
+    path(state) {
         return state.path
     },
-    isWritable: state => {
+    isWritable(state) {
         return state.isWritable
     },
 }
 
 const mutations = {
-    SET_DATA: (state, current) => {
-        Object.assign(state, current)
+    SET_DATA(state, { data, path, isWritable }) {
+        Object.assign(state, { data, path, isWritable })
     },
 }
 
 const datatable = {
     namespaced: true,
-    state: () => ({
-        data: [],
-        path: null,
-        isWritable: null,
-    }),
+    state() {
+        return {
+            data: [],
+            path: null,
+            isWritable: null,
+        }
+    },
     actions,
     getters,
     mutations

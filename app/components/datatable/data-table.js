@@ -1,16 +1,17 @@
-import DatatableRow from './datatable-row.js'
+import DataRow from './data-row.js'
 
 const components = {
-    DatatableRow
+    DataRow
 }
+
 const computed = {
     ...Vuex.mapGetters({
         entities: 'datatable/data'
     })
 }
 
-export default {
-    name: 'Datatable',
+const DataTable = {
+    name: 'DataTable',
     components,
     computed,
     template: `
@@ -35,12 +36,14 @@ export default {
             </tr>
         </thead>
         <tbody>
-            <datatable-row
+            <data-row
                 v-for="entity in entities"
                 :key="entity.id"
                 :entity="entity"
-            ></datatable-row>
+            ></data-row>
         </tbody>
     </table>
     `
 }
+
+export default DataTable

@@ -1,19 +1,22 @@
-import { httpGet } from '../../api/http-client.js'
+import { httpGet, httpStatus } from '../../api/http-client.js'
 import { fixPath } from '../../mixins.js'
 
 const actions = {
-    closeFile: ({ commit }, id) => {
+    closeFile({ commit }, id) {
         commit('CLOSE_FILE', id)
     },
-    openFile: async ({ commit, state, dispatch }, { id, path }) => {
-        let fixedPath = fixPath(path)
+    async openFile({ commit, state, dispatch }, entity) {
+        let fixedPath = fixPath(entity.path)
 
         try {
-            let isOpen = !!state.entities.find(e => e.id == id)
+            let isOpen = !!state.entities
+                .find(e => e.id == entity.id)
 
             if (!isOpen) {
-                let response = await httpGet(fixedPath)
-                let entity = response.data
+                if (!entity.data) {
+                    let response = await httpGet(fixedPath)
+                    entity.data = response.data.data
+                }
 
                 commit('OPEN_FILE', entity)
             }
@@ -22,48 +25,50 @@ const actions = {
         } catch (e) {
             let message = {
                 path: fixedPath,
-                body: e.response.statusText
+                body: httpStatus[e.response.status]
             }
 
             dispatch('message/setError', message, { root: true })
         }
     },
-    hideEditor: ({ commit }) => {
+    hideEditor({ commit }) {
         commit('SET_VISIBILITY', false)
     },
-    showEditor: ({ commit }) => {
+    showEditor({ commit }) {
         commit('SET_VISIBILITY', true)
     },
 }
 
 const getters = {
-    isVisible: state => {
+    isVisible(state) {
         return state.isVisible
     },
-    entities: state => {
+    entities(state) {
         return state.entities
     },
 }
 
 const mutations = {
-    CLOSE_FILE: (state, id) => {
+    CLOSE_FILE(state, id) {
         state.entities = state.entities
             .filter(entity => entity.id != id)
     },
-    OPEN_FILE: (state, data) => {
-        state.entities.push(data)
+    OPEN_FILE(state, entity) {
+        state.entities.push(entity)
     },
-    SET_VISIBILITY: (state, visibility) => {
+    SET_VISIBILITY(state, visibility) {
         state.isVisible = visibility
     },
 }
 
 const editor = {
     namespaced: true,
-    state: () => ({
-        isVisible: false,
-        entities: [],
-    }),
+    state() {
+        return {
+            isVisible: false,
+            entities: [],
+        }
+    },
     actions,
     getters,
     mutations

@@ -6,11 +6,18 @@ const components = {
 }
 
 const computed = {
-    ...Vuex.mapGetters('datatable', ['path', 'isWritable']),
+    ...Vuex.mapGetters({
+        path: 'datatable/path',
+        isWritable: 'datatable/isWritable',
+        editorEntities: 'editor/entities'
+    }),
 }
 
 const methods = {
-    ...Vuex.mapActions('datatable', ['setData']),
+    ...Vuex.mapActions({
+        setData: 'datatable/setData',
+        showEditor: 'editor/showEditor'
+    }),
 }
 
 const Searchbar = {
@@ -47,6 +54,13 @@ const Searchbar = {
             </div>
             <div class="control" :v-if="isWritable">
                 <searchbar-dropdown />
+            </div>
+            <div class="control">
+                <button class="button" @click="showEditor" :disabled="!editorEntities.length">
+                    <span class="icon">
+                        <i class="fa fa-bars"></i>
+                    </span>
+                </button>
             </div>
         </div>
     </section>

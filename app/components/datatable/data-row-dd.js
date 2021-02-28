@@ -1,13 +1,30 @@
 import Dropdown from '../dropdown.js'
 
-const DatatableRowDropdown = {
-    name: 'DatatableRowDropdown',
-    components: { Dropdown },
-    props: {
-        id: { type: String, required: true },
-        isReadable: { type: Boolean, required: true },
-        isDownloadable: { type: Boolean, required: true }
+const components = {
+    Dropdown
+}
+
+const computed = {
+    id() {
+        return this.entity.id
     },
+    isDownloadable() {
+        return this.entity.isDownloadable
+    },
+    isReadable() {
+        return this.entity.isReadable
+    },
+}
+
+const props = {
+    entity: { type: Object, required: true },
+}
+
+const DataRowDD = {
+    name: 'DataRowDD',
+    components,
+    computed,
+    props,
     template: `
     <dropdown :id="id" direction="is-up">
         <a class="dropdown-item pr-3">
@@ -23,7 +40,7 @@ const DatatableRowDropdown = {
             </span>
         </a>
     </dropdown>
-`
+    `
 }
 
-export default DatatableRowDropdown
+export default DataRowDD

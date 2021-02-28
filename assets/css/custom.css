@@ -18,29 +18,36 @@
     border-radius: 0 !important;
 }
 
+html {
+    overflow-y: auto;
+}
+
 body {
     font-family: Ubuntu, sans-serif;
 }
 
 aside {
     z-index: 50;
-    width: 100%;
+}
+
+.has-custom-fullheight {
+    height: 100vh;
+}
+
+.has-custom-fullheight-2 {
+    height: calc(100vh - 3.25rem)
+}
+
+.has-custom-fullwidth {
+    width: 100vw;
 }
 
 .is-overlay {
     left: auto;
 }
 
-.is-fullheight {
-    height: 100vh;
-}
-
 .has-scroll {
     overflow-y: auto;
-}
-
-.navbar-brand {
-    border-left: .75rem hsl(141, 71%, 48%) solid
 }
 
 .field:nth-last-of-type(2) {

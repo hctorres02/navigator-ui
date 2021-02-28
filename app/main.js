@@ -2,7 +2,7 @@ import Navbar from './components/navbar.js'
 import Sidebar from './components/sidebar/sidebar.js'
 import Searchbar from './components/searchbar.js'
 import MessageBox from './components/message-box.js'
-import Datatable from './components/datatable/datatable.js'
+import DataTable from './components/datatable/data-table.js'
 
 import router from './router.js'
 import store from './store/store.js'
@@ -13,18 +13,31 @@ const components = {
     Sidebar,
     Searchbar,
     MessageBox,
-    Datatable
+    DataTable
+}
+
+const computed = {
+    ...Vuex.mapGetters({
+        datatablePath: 'datatable/path',
+        editorIsVisible: 'editor/isVisible'
+    })
 }
 
 const methods = {
     ...Vuex.mapActions({
-        setData: 'datatable/setData',
-        setError: 'message/setError'
+        datatableSetData: 'datatable/setData',
+        messageSetError: 'message/setError'
     })
 }
 
-const computed = {
-    ...Vuex.mapGetters('editor', ['isVisible'])
+const watch = {
+    $route(to) {
+        let path = this.fixPath(to.path)
+
+        if (path) {
+            this.datatableSetData(path)
+        }
+    }
 }
 
 new Vue({
@@ -36,6 +49,7 @@ new Vue({
     computed,
     methods,
     mixins,
+    watch,
     mounted() {
         let previousUri = window.location.hash.replace('#/', '')
         let path = this.fixPath(previousUri || appConfig.home_dir)
@@ -45,31 +59,18 @@ new Vue({
             this.$router.push(`/${path}`)
         }
 
-        this.setData(path)
-    },
-    watch: {
-        $route(to) {
-            let path = this.fixPath(to.path)
-
-            if (path) {
-                this.setData(path)
-            }
-        }
+        this.datatableSetData(path)
     },
     template: `
-    <div class="px-4">
-        <header class="container block">
+    <div class="is-mobile">
+        <header class="has-background-primary">
             <navbar></navbar>
         </header>
-        <aside
-            class="is-overlay is-fullheight has-scroll has-background-primary"
-            :class="{ 'is-hidden': !isVisible }">
-            <sidebar></sidebar>
-        </aside>
-        <main class="container">
+        <sidebar v-if="editorIsVisible"></sidebar>
+        <main v-else class="has-custom-fullheight-2 has-scroll px-3">
             <searchbar></searchbar>
             <message-box></message-box>
-            <datatable></datatable>
+            <data-table></data-table>
         </main>
     </div>
     `

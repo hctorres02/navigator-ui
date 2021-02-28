@@ -5,9 +5,9 @@ const props = {
 }
 
 const methods = {
-    ...Vuex.mapActions([
-        'closeFile'
-    ])
+    ...Vuex.mapActions({
+        editorCloseFile: 'editor/closeFile'
+    })
 }
 
 export default {
@@ -15,11 +15,13 @@ export default {
     methods,
     mixins,
     props,
-    data: () => ({
-        editorId: () => `editor_${this.entity.id}`
-    }),
+    data() {
+        return {
+            editorId: `editor_${this.entity.id}`
+        }
+    },
     template: `
-    <div class="box">
+    <div class="box p-3">
         <div class="field is-grouped">
             <div class="control is-expanded">
                 <input class="input" type="text" :value="entity.path" disabled>
@@ -35,14 +37,18 @@ export default {
                 </button>
             </div>
             <div class="control">
-                <button class="button" @click="closeFile(entity.id)">
+                <button class="button" @click="editorCloseFile(entity.id)">
                     <span class="icon"><i class="fa fa-close"></i></span>
                 </button>
             </div>
         </div>
-        <div :id="editorId" class="field is-hidden">
+        <div :id="editorId" class="field">
             <div class="control">
-                <textarea class="textarea" rows="12" placeholder="Textarea"></textarea>
+                <textarea
+                    class="textarea"
+                    rows="12"
+                    placeholder="Textarea"
+                    v-model="entity.data"></textarea>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-export const fixPath = (path) => {
+export function fixPath(path) {
     let SLASH = '/'
     let BACKSLASH = '\\'
     let COLLON = ':'
@@ -24,7 +24,7 @@ export const fixPath = (path) => {
     return path
 }
 
-export const toggle = (element_id, className = 'is-active') => {
+export function toggle(element_id, className = 'is-active') {
     document.getElementById(element_id).classList.toggle(className)
 }
 
