@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="has-background-light">
 
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <title>Navigator</title>
-        <link rel="dns-prefetch" href="https://unpkg.com">
-        <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.2/css/bulma.css">
+
+        <!-- -->
+        <link rel="preconnect" href="https://unpkg.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+
+        <!-- styles -->
+        <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.2/css/bulma.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap">
         <link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css">
+
+        <!-- custom styles -->
         <link rel="stylesheet" href="assets/css/custom.css">
     </head>
 
@@ -15,18 +24,11 @@
         <div id="app"></div>
 
         <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
-        <script src="https://unpkg.com/vue-router@3.5.1/dist/vue-router.js"></script>
         <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
         <script src="https://unpkg.com/axios@0.21.1/dist/axios.js"></script>
-
-        <script>
-            const appConfig = {
-                home_dir: 'C:/htdocs/navigator-ui',
-                api_url: 'https://localhost/navigator-api/'
-            }
-        </script>
-
-        <script src="./app/main.js" type="module"></script>
+        <script src="https://unpkg.com/bulma-toast@2.2.0/dist/bulma-toast.min.js"></script>
+        <script src="./config.js"></script>
+        <script src="./app.js" type="module"></script>
     </body>
 
 </html>
