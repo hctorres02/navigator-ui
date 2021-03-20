@@ -14,25 +14,27 @@ const components = {
 const template = `
     <section class="box p-3">
         <div class="columns is-multiline is-mobile">
-            <div class="column is-3-desktop is-12-touch">
-                <browser-actions />
-            </div>
-            <div class="column is-6-dektop is-10-touch">
+            <div class="column is-6-dektop is-12-touch">
                 <browser-navigation
                     :path="path"
                     :dirname="dirname"
-                    @click="fetchData"
-                />
+                    @click="fetchData" />
             </div>
             <div class="column is-2-desktop is-2-touch">
-                <browser-uploader />
+                <browser-uploader
+                    :disabled="!isWritable" />
+            </div>
+            <div class="column is-3-desktop is-10-touch">
+                <browser-actions
+                    :clipboard="clipboard"
+                    @click="handleAction" />
             </div>
             <div class="column is-12">
                 <browser-table
                     :entities="entities"
-                    @click="handleClick"
-                    @change="toggleSelect"
-                />
+                    :allChecked="allChecked"
+                    @click="handleTable"
+                    @change="toggleSelected" />
             </div>
         </div>
     </section>
@@ -40,12 +42,16 @@ const template = `
 
 const computed = {
     ...Vuex.mapGetters([
+        'allChecked',
+        'clipboard',
         'entities',
         'findBy',
+        'hasClipboardItems'
     ]),
     ...Vuex.mapState([
         'path',
-        'dirname'
+        'dirname',
+        'isWritable'
     ])
 }
 
@@ -53,9 +59,9 @@ const methods = {
     ...Vuex.mapActions([
         'fetchData',
         'openFile',
-        'toggleSelect'
+        'toggleSelected'
     ]),
-    handleClick(path) {
+    handleTable(path) {
         let { isDir } = this.findBy(path, 'path', this.entities)
 
         if (isDir) {
@@ -64,6 +70,16 @@ const methods = {
         }
 
         this.openFile(path)
+    },
+    handleAction(payload) {
+        let { selected, message } = payload
+
+        if (selected) {
+            toast({ message })
+            return
+        }
+
+        toast(payload)
     }
 }
 

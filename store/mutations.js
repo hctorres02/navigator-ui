@@ -1,11 +1,13 @@
-const mutations = {
-    FETCH_DATA(state, payload) {
-        let { data, path, dirname, isWritable } = payload
-
-        Object.assign(state, { data, path, dirname, isWritable })
-    },
-    TOGGLE_SELECT(state, payload) {
-        console.log(payload)
+export default {
+    FETCH_DATA(state, { data, path, dirname, isWritable }) {
+        Object.assign(state, {
+            ...state,
+            data,
+            path,
+            dirname,
+            isWritable,
+            clipboard: []
+        })
     },
     EDITOR_ADD(state, entity) {
         state.editor.push(entity)
@@ -17,8 +19,12 @@ const mutations = {
         state.clipboard.push(path)
     },
     CLIPBOARD_REMOVE(state, path) {
-        state.clipboard = state.clipboard.filter(e => e.path != path)
+        state.clipboard = state.clipboard.filter(p => p != path)
+    },
+    UPDATE_ENTITIES(state, data) {
+        Object.assign(state, {
+            ...state,
+            data
+        })
     }
 }
-
-export default mutations

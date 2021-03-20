@@ -1,4 +1,3 @@
-import { toast } from '../../mixins/index.js'
 import { NButton } from '../index.js'
 
 const components = {
@@ -10,9 +9,11 @@ const template = `
         <div class="control is-expanded">
             <span class="select is-fullwidth">
                 <select v-model="selected">
-                    <option disabled selected :value="null">Actions</option>
+                    <option disabled selected :value="null">
+                        Actions
+                    </option>
                     <optgroup
-                        v-for="group in actions"
+                        v-for="group in items"
                         :key="group.label"
                         :label="group.label">
                         <option
@@ -28,18 +29,23 @@ const template = `
             <n-button
                 custom="is-outlined"
                 icon="arrow-right"
-                @click="handleClick" />
+                @click="handleClick"
+            />
         </div>
     </div>
 `
 
+const props = {
+    clipboard: Array
+}
+
 const data = function () {
     return {
         selected: null,
-        actions: [
+        items: [
             {
                 label: 'Clipboard',
-                options: ['Copy', 'Cut', 'Paste']
+                options: ['Cut', 'Paste']
             },
             {
                 label: 'Organize',
@@ -47,22 +53,18 @@ const data = function () {
             },
             {
                 label: 'Transfer',
-                options: ['Download (zipped)']
+                options: ['Download']
             }
         ]
     }
 }
 
-const computed = {
-    ...Vuex.mapState([
-        'clipboard'
-    ])
-}
-
 const methods = {
     handleClick() {
+        let type = 'click'
+
         if (!this.clipboard.length) {
-            toast({
+            this.$emit(type, {
                 message: 'Select any entity!',
                 type: 'is-warning'
             })
@@ -70,18 +72,19 @@ const methods = {
         }
 
         if (!this.selected) {
-            toast({
+            this.$emit(type, {
                 message: 'Select an action!',
                 type: 'is-warning'
             })
             return
         }
 
-        toast({
+        this.$emit(type, {
+            selected: this.selected,
             message: `${this.clipboard.length} entities prepared to <b>${this.selected}</b>`
         })
 
-        this.selectedAction = null
+        this.selected = null
     },
 }
 
@@ -89,7 +92,7 @@ export default {
     name: 'browser-actions',
     components,
     template,
+    props,
     data,
-    computed,
     methods
 }

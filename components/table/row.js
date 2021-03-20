@@ -5,14 +5,13 @@ const template = `
         <td class="is-1">
             <input
                 type="checkbox"
-                :value="entity.path"
-                @change="handleChange">
+                :checked="entity.isSelected"
+                @change="handleChange" />
         </td>
         <td>
             <a
                 v-if="entity.isReadable"
                 :href="fixedPath"
-                :data-path="entity.path"
                 @click.prevent="handleClick">
                 {{ entity.name }}
             </a>
@@ -38,13 +37,15 @@ const data = function () {
 
 const methods = {
     handleChange({ type, target }) {
-        this.$emit(type, {
-            path: target.value,
-            checked: target.checked
-        })
+        let payload = [{
+            ...this.entity,
+            isSelected: target.checked
+        }]
+
+        this.$emit(type, payload)
     },
-    handleClick({ type, target }) {
-        this.$emit(type, target.dataset.path)
+    handleClick({ type }) {
+        this.$emit(type, this.entity.path)
     },
 }
 

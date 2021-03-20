@@ -1,25 +1,22 @@
 import { fixPath } from '../mixins/index.js'
 
 export default {
-    fixedPath(state) {
-        return fixPath(state.path)
+    fixedPath({ path }) {
+        return fixPath(path)
     },
-    levelUp(state) {
-        return state.dirname
+    levelUp({ dirname }) {
+        return dirname
     },
-    hasLevelUp(state) {
-            
+    hasLevelUp({ path, dirname }) {
+        return path != dirname
     },
-    directories(state) {
-        return state.data.filter(e => e.isDir)
+    hasData({ data }) {
+        return !!data.length
     },
-    files(state) {
-        return state.data.filter(e => !e.isDir)
-    },
-    entities(_, getters) {
+    entities({ data }) {
         return [
-            ...getters.directories,
-            ...getters.files
+            ...data.filter(e => e.isDir),
+            ...data.filter(e => !e.isDir)
         ]
     },
     findBy(_, getters) {
@@ -30,5 +27,14 @@ export default {
 
             return repo.find(e => e[prop] == value)
         }
+    },
+    clipboard({ data }) {
+        return data.filter(e => e.isSelected == true)
+    },
+    hasClipboardItems(_, { clipboard }) {
+        return !!clipboard.length
+    },
+    allChecked(_, { clipboard, entities }) {
+        return clipboard.length === entities.length
     }
 }

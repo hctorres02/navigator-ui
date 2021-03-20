@@ -4,7 +4,6 @@ import mutations from './mutations.js'
 
 const state = function () {
     return {
-        clipboard: [],
         editor: [],
         data: [],
         path: null,

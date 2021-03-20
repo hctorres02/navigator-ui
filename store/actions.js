@@ -5,6 +5,13 @@ export default {
     async fetchData({ commit }, path) {
         let response = await httpGet(path)
 
+        response.data = response.data.map(e => {
+            return {
+                ...e,
+                isSelected: false
+            }
+        })
+
         if (response.isDir) {
             commit('FETCH_DATA', response)
             return
@@ -34,16 +41,16 @@ export default {
 
         dispatch('fetchData', path)
     },
-    saveFile({ commit, dispatch }, payload) {
-        let { path, data } = payload
-
+    saveFile({ commit, dispatch }, { path, data }) {
         toast({
             message: `<b>${path}</b> as saved!`,
             type: 'is-success'
         })
     },
-    toggleSelect({ commit }, { path, checked }) {
-        let action = checked ? 'CLIPBOARD_ADD' : 'CLIPBOARD_REMOVE'
-        commit(action, path)
+    toggleSelected({ commit, state }, payload) {
+        let data = state.data.map((sd) =>
+            payload.find(p => p.id == sd.id) ?? sd)
+
+        commit('UPDATE_ENTITIES', data)
     }
 }

@@ -6,27 +6,27 @@ const components = {
 
 const template = `
     <div class="field has-addons">
-        <div class="control">
-            <n-button
-                icon="level-up"
-                custom="is-outlined"
-                :disabled="!hasLevelUp"
-                @click="handleClick(dirname)"
-            />
-        </div>
         <div class="control is-expanded">
             <input
                 type="text"
                 class="input"
                 :value="path"
                 readonly
-            >
+            />
         </div>
         <div class="control">
             <n-button
                 icon="refresh"
                 custom="is-outlined"
                 @click="handleClick(path)"
+            />
+        </div>
+        <div class="control">
+            <n-button
+                icon="level-up"
+                custom="is-outlined"
+                :disabled="!hasLevelUp"
+                @click="handleClick(dirname)"
             />
         </div>
     </div>
