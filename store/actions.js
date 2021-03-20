@@ -5,14 +5,14 @@ export default {
     async fetchData({ commit }, path) {
         let response = await httpGet(path)
 
-        response.data = response.data.map(e => {
-            return {
-                ...e,
-                isSelected: false
-            }
-        })
-
         if (response.isDir) {
+            response.data = response.data.map(e => {
+                return {
+                    ...e,
+                    isSelected: false
+                }
+            })
+
             commit('FETCH_DATA', response)
             return
         }
