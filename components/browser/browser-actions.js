@@ -1,36 +1,22 @@
-import { NButton } from '../index.js'
+import { NButton, NSelect } from '../index.js'
 
 const components = {
-    NButton
+    NButton,
+    NSelect
 }
 
 const template = `
     <div class="field has-addons">
         <div class="control is-expanded">
-            <span class="select is-fullwidth">
-                <select v-model="selected">
-                    <option disabled selected :value="null">
-                        Actions
-                    </option>
-                    <optgroup
-                        v-for="group in items"
-                        :key="group.label"
-                        :label="group.label">
-                        <option
-                            v-for="option in group.options"
-                            :key="option">
-                            {{ option }}
-                        </option>
-                    </optgroup>
-                </select>
-            </span>
+            <n-select
+                :items="items"
+                @change="handleChange" />
         </div>
         <div class="control">
             <n-button
                 custom="is-outlined"
                 icon="arrow-right"
-                @click="handleClick"
-            />
+                @click="handleClick" />
         </div>
     </div>
 `
@@ -60,14 +46,16 @@ const data = function () {
 }
 
 const methods = {
-    handleClick() {
-        let type = 'click'
-
+    handleChange(selected) {
+        this.selected = selected
+    },
+    handleClick({ type }) {
         if (!this.clipboard.length) {
             this.$emit(type, {
                 message: 'Select any entity!',
                 type: 'is-warning'
             })
+
             return
         }
 
@@ -76,6 +64,7 @@ const methods = {
                 message: 'Select an action!',
                 type: 'is-warning'
             })
+
             return
         }
 
@@ -83,9 +72,7 @@ const methods = {
             selected: this.selected,
             message: `${this.clipboard.length} entities prepared to <b>${this.selected}</b>`
         })
-
-        this.selected = null
-    },
+    }
 }
 
 export default {
